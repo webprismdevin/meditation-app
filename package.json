@@ -17,10 +17,14 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+    "prebuild": "run-s purge-css",
+    "prestart": "run-s purge-css",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "purge-css": "purgecss --content src/*.js src/**/**/*.js src/**/*.js src/App.js public/**/*.html --css src/styles/tailwind.css --output src/styles/tailwind-purged.css"
+
   },
   "eslintConfig": {
     "extends": [

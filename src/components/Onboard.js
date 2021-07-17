@@ -2,14 +2,16 @@ import React from 'react';
 
 const Slide = (props) => {
     return(
-        <div>
+        <div className={props.className}>
             {props.content}
         </div>
     )
 }
 
 const NavButton = (props) => {
-
+    return (
+        <button onClick={props.callBack} className={`mt-4 pl-4 pr-4 pt-2 pb-2 bg-white ${props.className}`}>{props.buttonText}</button>
+    )
 }
 
 export default class Onboard extends React.Component{
@@ -22,8 +24,7 @@ export default class Onboard extends React.Component{
     }
 
     buttonText = [
-        'Start →',
-        'Next',
+        'Start →'
     ]
 
     handleNext = () => {
@@ -34,6 +35,7 @@ export default class Onboard extends React.Component{
     }
 
     handlePrevious = () => {
+        this.props.decrementIndex();
         if(this.state.index > 0){
             this.setState({
                 index: this.state.index - 1
@@ -54,15 +56,17 @@ export default class Onboard extends React.Component{
         let slides = [
             "It only takes 2 minutes to reset your mind...",
             "let's focus on you for a moment",
-            ""
+            "You will be listening to a guided meditation. There will be no text to read...",
+            "The purpose is to look at yourself, like a mirror.",
+            "Connect with yourself."
         ]
 
         return(
-            <div className="p-4">
-                <div><Slide content={slides[this.state.index]} /></div>
-                <div>{this.state.index >= 1 ? <button className="mt-4 pl-4 pr-4 pt-2 pb-2 bg-white" onClick={this.handlePrevious}>Prev</button> : null}<span> </span>
-                        <button className="mt-4 pl-4 pr-4 pt-2 pb-2 bg-white" onClick={this.handleNext}>{this.returnButtonText(this.state.index)}</button>
-                    </div>
+            <div className="p-4 flex flex-col items-center">
+                <Slide className="text-white" content={slides[this.state.index]} />
+                <div>{this.state.index >= 1 ? <NavButton className="mr-2" buttonText="← Prev" callBack={this.handlePrevious} /> : null}
+                    <NavButton className="ml-2" buttonText="Next →" callBack={this.handleNext}/>
+                </div>
             </div>
         )
     }
