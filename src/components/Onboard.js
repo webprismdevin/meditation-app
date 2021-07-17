@@ -1,20 +1,15 @@
 import React from 'react';
 
-const Slide1 = (props) => {
+const Slide = (props) => {
     return(
         <div>
-            <p>Welcome.</p>
-            <p>None of this is recorded.</p>
+            {props.content}
         </div>
     )
 }
 
-const Slide2 = (props) => {
-    return (
-        <div>
-            <span>Take a moment for you.</span>
-        </div>
-    )
+const NavButton = (props) => {
+
 }
 
 export default class Onboard extends React.Component{
@@ -25,6 +20,11 @@ export default class Onboard extends React.Component{
             index: props.index
         }
     }
+
+    buttonText = [
+        'Start →',
+        'Next',
+    ]
 
     handleNext = () => {
         this.props.incrementIndex();
@@ -41,17 +41,28 @@ export default class Onboard extends React.Component{
         }
     }
 
+    returnButtonText = (index) => {
+        switch(index === true){
+            case (this.buttonText !== undefined):
+                return this.buttonText[index]
+            default:
+                return 'Next →'
+        }
+    }
+
     render(){
-        let components = [  <Slide1/>, 
-                            <Slide2 />,
-                            <span>Can you see yourself?</span>,
-                            <span>Press "Next" to get started.</span>
-                        ]
+        let slides = [
+            "It only takes 2 minutes to reset your mind...",
+            "let's focus on you for a moment",
+            ""
+        ]
 
         return(
             <div className="p-4">
-                <div>{components[this.state.index]}</div>
-                <div className="animate-pulse">{this.state.index >= 1 ? <button onClick={this.handlePrevious}>Prev</button> : null}<span> </span><button onClick={this.handleNext}>Next</button></div>
+                <div><Slide content={slides[this.state.index]} /></div>
+                <div>{this.state.index >= 1 ? <button className="mt-4 pl-4 pr-4 pt-2 pb-2 bg-white" onClick={this.handlePrevious}>Prev</button> : null}<span> </span>
+                        <button className="mt-4 pl-4 pr-4 pt-2 pb-2 bg-white" onClick={this.handleNext}>{this.returnButtonText(this.state.index)}</button>
+                    </div>
             </div>
         )
     }
