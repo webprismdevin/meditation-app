@@ -1,7 +1,7 @@
 import React from "react";
 import Webcam from 'react-webcam';
 import Onboard from "./components/Onboard";
-import background from './assets/bkg-min.jpg';
+import background from './assets/bkg-min-3.jpg';
 import { fadeIn, pulse } from 'react-animations';
 import { StyleSheet, css } from 'aphrodite';
 import './App.css';
@@ -42,7 +42,7 @@ class App extends React.Component {
 
     return(
       <div className={css(styles.AppWrapper)}>
-        {this.state.index > 0 ? <Webcam width={this.state.width} height={this.state.height} mirrored={true} className={css(styles.videoCam)} /> : <></>}
+        {this.state.index > 4 ? <Webcam width={this.state.width} height={this.state.height} mirrored={true} className={css(styles.videoCam)} /> : <></>}
         <div className={css(styles.container, styles.pulse)}></div>
         <div className={css(styles.onboarding)}>
           <Onboard incrementIndex={this.increment} decrementIndex={this.decrement} index={this.state.index} />
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   pulse: {
     animationName: pulse,
-    animationDuration: '3800ms',
+    animationDuration: '4200ms',
     animationIterationCount: 'infinite'
   },
   fadeIn: {
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundImage: `url(${background})`,
     backgroundSize: 'cover',
+    opacity: 0.98,
     height: '110vh',
     width: '110vw',
     display: 'flex',
@@ -79,11 +80,15 @@ const styles = StyleSheet.create({
     padding: 0
   },
   onboarding: {
-    position: 'fixed',
-    bottom: '20px',
-    right: '20vw',
-    width: '60vw',
-    zIndex: 1
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2
   },
   videoCam: {
     position: 'fixed',

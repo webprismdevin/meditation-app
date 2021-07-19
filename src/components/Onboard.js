@@ -14,6 +14,22 @@ const NavButton = (props) => {
     )
 }
 
+const Navigation = (props) => {
+    let buttonText = [
+        'Start →',
+        'Next →',
+        'Next →',
+        'Next →',
+        'Ready?'    
+    ];
+    
+    return(
+        <div>{props.index >= 1 ? <NavButton className="mr-2" buttonText="← Prev" callBack={props.handlePrevious} /> : null}
+            <NavButton className="ml-2" buttonText={buttonText[props.index]} callBack={props.handleNext}/>
+        </div>
+    )
+}
+
 export default class Onboard extends React.Component{
     constructor(props){
         super(props)
@@ -22,10 +38,6 @@ export default class Onboard extends React.Component{
             index: props.index
         }
     }
-
-    buttonText = [
-        'Start →'
-    ]
 
     handleNext = () => {
         this.props.incrementIndex();
@@ -59,14 +71,15 @@ export default class Onboard extends React.Component{
             "You will be listening to a guided meditation. There will be no text to read...",
             "The purpose is to look at yourself, like a mirror.",
             "Connect with yourself."
-        ]
+        ];
+
+        let index = this.state.index;
 
         return(
             <div className="p-4 flex flex-col items-center">
-                <Slide className="text-white" content={slides[this.state.index]} />
-                <div>{this.state.index >= 1 ? <NavButton className="mr-2" buttonText="← Prev" callBack={this.handlePrevious} /> : null}
-                    <NavButton className="ml-2" buttonText="Next →" callBack={this.handleNext}/>
-                </div>
+                <Slide className="text-black" content={slides[index]} />
+                {index <= 4 ? <Navigation handlePrevious={this.handlePrevious} handleNext={this.handleNext} index={index} /> : <></>}
+
             </div>
         )
     }
@@ -75,7 +88,7 @@ export default class Onboard extends React.Component{
 /* 
 
     hour count so far:
-    4 hours
+    6 hours
 
     next steps: 
     - add audio track once recieved
