@@ -51,8 +51,8 @@ export default class Onboard extends React.Component{
         "It only takes 2 minutes to reset your mind...",
         "let's focus on you for a moment",
         "You will be listening to a guided meditation. There will be no text to read...",
-        "The purpose is to look at yourself, like a mirror.",
-        "Connect with yourself."
+        // "The purpose is to look at yourself, like a mirror.",
+        // "Connect with yourself."
     ];
 
     render(){

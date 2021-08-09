@@ -1,83 +1,99 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Webcam from 'react-webcam';
 import Onboard from "./components/Onboard/Onboard";
 import background from './assets/bkg-min-3.jpg';
-import { fadeIn, pulse } from 'react-animations';
+import { fadeIn, pulse, fadeOut } from 'react-animations';
 import { StyleSheet, css } from 'aphrodite';
-import Player from './components/Audio/Player';
+import useAudio from './components/Audio/Player';
 import soundfile1 from './components/Audio/files/bensound-acousticbreeze.mp3';
-import soundfile2 from './components/Audio/files/bensound-anewbeginning.mp3'
+import soundfile2 from './components/Audio/files/bensound-anewbeginning.mp3';
+import soundfile3 from './components/Audio/files/Rome.mp3';
 
 import './App.css';
 
-class App extends React.Component {
-  constructor(props){
-    super(props);
+const App = () => {
+  const audioArray = [soundfile3, soundfile1, soundfile2];
+  const readyIndex = 1;
 
-    this.state = {
-      index: 0,
-      height: window.innerHeight,
-      width: window.innerWidth
-    }
-  }
+  const [index, setIndex] = useState(0);
+  const [dimensions, setDimensions] = useState({height: window.innerHeight, width: window.innerWidth});
+  const [track, setTrack] = useState(0);
+  const [playing, toggle, audio] = useAudio(audioArray[track]);
+  const [done, setDone] = useState(false);
+  const [feel, setFeel] = useState("");
 
-  increment = () => {
-    this.setState({index: this.state.index + 1});
-  }
-
-  decrement = () => {
-    if(this.state.index > 0){
-      this.setState({index: this.state.index -1})
-    }
-  }
-
-  componentDidMount(){
-    window.addEventListener("resize", this.update);
-  }
-
-  update = () => {
-    this.setState({
-      height: window.innerHeight,
-      width: window.innerWidth
-    })
+  const update = () => {
+    setDimensions({height: window.innerHeight,width: window.innerWidth})
   };
 
-  render(){
-    let index = this.state.index;
-    let aspect = this.state.width / this.state.height;
-    let readyIndex = 1;
-
-    const videoConstraints = {
-      width: this.state.width,
-      height: this.state.height,
-      aspectRatio: aspect
-    }
-
-    return(
-      <div className={css(styles.AppWrapper)}>
-        <div className={index === readyIndex ? css(styles.fadeIn) : ''}>
-        {index > 0 ? <Webcam 
-                                  width={videoConstraints.width} 
-                                  height={videoConstraints.height} 
-                                  mirrored={true} 
-                                  className={css(styles.videoCam)}
-                                  audio={false}  
-                                  videoConstraints={videoConstraints}
-                                />
-                                  : <></>
-        }
-        </div>
-        <div className={css(styles.container, index < readyIndex ? styles.pulse : styles.webCamOnBkg)}></div>
-        <div className={css(styles.onboarding, index > 0 ? styles.lowerOnboarding : '')}>
-          <Onboard incrementIndex={this.increment} decrementIndex={this.decrement} index={index} />
-        </div>
-        {index > 0 && <Player />}
-        <div className={css(styles.skip, index > 0 ? styles.hideSkip : '')}>
-          <span>SKIP →</span>
-        </div>
-      </div>
-    )
+  const handleEnded = () => {
+    toggle();
+    console.log("ended");
+    setDone(true);
   }
+
+  useEffect(() => {
+    window.addEventListener("resize", update);
+  }, [])
+
+  useEffect(() => {
+    if(index === 1) toggle();
+  }, [index]);
+
+  useEffect(() => {
+    audio.addEventListener('ended', () => handleEnded());
+    return () => {
+      audio.removeEventListener('ended', () => handleEnded());
+    };
+  }, [audio])
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(feel)
+  }
+  
+  let aspect = dimensions.width / dimensions.height;
+
+  const videoConstraints = {
+    width: dimensions.width,
+    height: dimensions.height,
+    aspectRatio: aspect
+  }
+
+  return(
+    <div className={css(styles.AppWrapper)}>
+      <div className={css(index === readyIndex ? styles.fadeIn : '', done && styles.fadeOut)}>
+      {index > 0 ? <Webcam 
+                                width={videoConstraints.width} 
+                                height={videoConstraints.height} 
+                                mirrored={true} 
+                                className={css(styles.videoCam)}
+                                audio={false}  
+                                videoConstraints={videoConstraints}
+                              />
+                                : <></>
+      }
+      </div>
+      <div className={css(styles.container, index < readyIndex ? styles.pulse : styles.webCamOnBkg)}></div>
+      <div className={css(styles.trackSelection, index > 0 ? styles.hide : '')}>
+        <p><strong>Select your meditation track:</strong></p>
+        <select onChange={e => setTrack(parseInt(e.target.value))}>
+          <option value={0}>Track 1: Short test</option>
+          <option value={1}>Track 2: A New Beginning</option>
+          <option value={0}>Track 1: Acoustic Breeze</option>
+        </select>
+      </div>
+      <div className={css(styles.onboarding, index > 0 && styles.lowerOnboarding, done && styles.raiseOnboarding)}>
+        <Onboard incrementIndex={() => setIndex(index + 1)} decrementIndex={() => setIndex(index + 1)} index={index} />
+        {done &&  <form onSubmit={handleSubmit} name="feelform">
+                    <input type="text" placeholder="in one word, describe how you feel." onChange={e => setFeel(e.target.value)} value={feel} style={{width: '300px', padding: 8,}}/>
+                  </form>}
+      </div>
+      <div className={css(styles.skip, index > 0 ? styles.hide : '')}>
+        <span>SKIP →</span>
+      </div>
+    </div>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -105,7 +121,13 @@ const styles = StyleSheet.create({
   fadeIn: {
     animationName: fadeIn,
     animationDuration: '2800ms',
-    animationDelay: '400ms',
+    animationDelay: '800ms',
+  },
+  fadeOut: {
+    animationName: fadeOut,
+    animationDuration: '2800ms',
+    // animationDelay: '400ms',
+    opacity: 0
   },
   container: {
     backgroundSize: 'cover',
@@ -132,6 +154,9 @@ const styles = StyleSheet.create({
   lowerOnboarding: {
     transform: 'translateY(40vh)'
   },
+  raiseOnboarding: {
+    transform: 'translateY(0vh)'
+  },
   videoCam: {
     position: 'fixed',
     top: '0',
@@ -144,8 +169,14 @@ const styles = StyleSheet.create({
     right: 10,
     zIndex: 2
   },
-  hideSkip: {
+  hide: {
     visibility: 'hidden'
+  },
+  trackSelection: {
+    position: 'fixed', 
+    top: 10, 
+    right: 10, 
+    zIndex: 3
   }
 });
 

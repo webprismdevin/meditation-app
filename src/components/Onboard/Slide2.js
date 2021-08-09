@@ -3,10 +3,7 @@ import { useEffect, useState } from "react";
 const Slide2 = (props) => {
     const [intervalId, setIntervalId] = useState(0);
 
-    console.log("loaded")
-
     useEffect(() => {
-        console.log("in effect", props.ready)
         if(props.ready === false){
             clearInterval(intervalId)
             return;
