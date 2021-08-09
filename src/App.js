@@ -4,6 +4,10 @@ import Onboard from "./components/Onboard/Onboard";
 import background from './assets/bkg-min-3.jpg';
 import { fadeIn, pulse } from 'react-animations';
 import { StyleSheet, css } from 'aphrodite';
+import Player from './components/Audio/Player';
+import soundfile1 from './components/Audio/files/bensound-acousticbreeze.mp3';
+import soundfile2 from './components/Audio/files/bensound-anewbeginning.mp3'
+
 import './App.css';
 
 class App extends React.Component {
@@ -67,6 +71,7 @@ class App extends React.Component {
         <div className={css(styles.onboarding, index > 0 ? styles.lowerOnboarding : '')}>
           <Onboard incrementIndex={this.increment} decrementIndex={this.decrement} index={index} />
         </div>
+        {index > 0 && <Player />}
         <div className={css(styles.skip, index > 0 ? styles.hideSkip : '')}>
           <span>SKIP →</span>
         </div>
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-    padding: 0
+    padding: 0,
   },
   onboarding: {
     position: 'absolute',
@@ -120,7 +125,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
-    transition: '1200ms transform'
+    transition: '1200ms transform',
+    maxHeight: '100vh',
+    overflow: 'hidden'
   },
   lowerOnboarding: {
     transform: 'translateY(40vh)'
