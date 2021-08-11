@@ -18,6 +18,7 @@ const App = () => {
   const [index, setIndex] = useState(0);
   const [dimensions, setDimensions] = useState({height: window.innerHeight, width: window.innerWidth});
   const [track, setTrack] = useState(0);
+  // eslint-disable-next-line no-unused-vars
   const [playing, toggle, audio] = useAudio(audioArray[track]);
   const [done, setDone] = useState(false);
   const [feel, setFeel] = useState("");
@@ -38,6 +39,7 @@ const App = () => {
 
   useEffect(() => {
     if(index === 1) toggle();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const App = () => {
     return () => {
       audio.removeEventListener('ended', () => handleEnded());
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audio])
 
   const handleSubmit = (e) => {

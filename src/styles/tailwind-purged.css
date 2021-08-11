@@ -91,6 +91,11 @@ Add the correct text decoration in Chrome, Edge, and Safari.
 Add the correct font weight in Edge and Safari.
 */
 
+
+strong {
+  font-weight: bolder;
+}
+
 /**
 1. Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
 2. Correct the odd 'em' font sizing in all browsers.
@@ -125,6 +130,7 @@ Forms
 */
 
 button,
+input,
 select {
   font-family: inherit;
   /* 1 */
@@ -151,7 +157,9 @@ select {
 Correct the inability to style clickable types in iOS and Safari.
 */
 
-button {
+button,
+[type='button'],
+[type='reset'] {
   -webkit-appearance: button;
 }
 
@@ -212,6 +220,11 @@ Add the correct display in Chrome and Safari.
 /**
  * Removes the default spacing and border for appropriate elements.
  */
+
+
+p {
+  margin: 0;
+}
 
 button {
   background-color: transparent;
@@ -299,6 +312,21 @@ body {
  * https://github.com/tailwindcss/tailwindcss/issues/362
  */
 
+input::-webkit-input-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+input:-ms-input-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
+input::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+
 button {
   cursor: pointer;
 }
@@ -322,6 +350,7 @@ a {
  */
 
 button,
+input,
 select {
   padding: 0;
   line-height: inherit;
