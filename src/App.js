@@ -4,56 +4,25 @@ import Onboard from "./components/Onboard/Onboard";
 import background from './assets/bkg-min-3.jpg';
 import { fadeIn, pulse, fadeOut } from 'react-animations';
 import { StyleSheet, css } from 'aphrodite';
-import useAudio from './components/Audio/Player';
-import soundfile1 from './components/Audio/files/bensound-acousticbreeze.mp3';
-import soundfile2 from './components/Audio/files/bensound-anewbeginning.mp3';
-import soundfile3 from './components/Audio/files/Rome.mp3';
+import EndForm from "./components/EndForm/EndForm";
 
 import './App.css';
 
 const App = () => {
-  const audioArray = [soundfile3, soundfile1, soundfile2];
   const readyIndex = 1;
 
   const [index, setIndex] = useState(0);
   const [dimensions, setDimensions] = useState({height: window.innerHeight, width: window.innerWidth});
-  const [track, setTrack] = useState(0);
-  // eslint-disable-next-line no-unused-vars
-  const [playing, toggle, audio] = useAudio(audioArray[track]);
   const [done, setDone] = useState(false);
-  const [feel, setFeel] = useState("");
+  const [hasCameraAccess, setCameraAccess] = useState(false);
 
   const update = () => {
     setDimensions({height: window.innerHeight,width: window.innerWidth})
   };
 
-  const handleEnded = () => {
-    toggle();
-    console.log("ended");
-    setDone(true);
-  }
-
   useEffect(() => {
     window.addEventListener("resize", update);
-  }, [])
-
-  useEffect(() => {
-    if(index === 1) toggle();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index]);
-
-  useEffect(() => {
-    audio.addEventListener('ended', () => handleEnded());
-    return () => {
-      audio.removeEventListener('ended', () => handleEnded());
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audio])
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(feel)
-  }
+  }, []);
   
   let aspect = dimensions.width / dimensions.height;
 
@@ -73,24 +42,23 @@ const App = () => {
                                 className={css(styles.videoCam)}
                                 audio={false}  
                                 videoConstraints={videoConstraints}
+                                onUserMedia={() => setCameraAccess(true)}
+                                onUserMediaError={() => setCameraAccess(false)}
                               />
-                                : <></>
+                              :
+                              <></>
       }
       </div>
       <div className={css(styles.container, index < readyIndex ? styles.pulse : styles.webCamOnBkg)}></div>
-      <div className={css(styles.trackSelection, index > 0 ? styles.hide : '')}>
-        <p><strong>Select your meditation track:</strong></p>
-        <select onChange={e => setTrack(parseInt(e.target.value))}>
-          <option value={0}>Track 1: Short test</option>
-          <option value={1}>Track 2: A New Beginning</option>
-          <option value={0}>Track 1: Acoustic Breeze</option>
-        </select>
-      </div>
       <div className={css(styles.onboarding, index > 0 && styles.lowerOnboarding, done && styles.raiseOnboarding)}>
-        <Onboard incrementIndex={() => setIndex(index + 1)} decrementIndex={() => setIndex(index + 1)} index={index} />
-        {done &&  <form onSubmit={handleSubmit} name="feelform">
-                    <input type="text" placeholder="in one word, describe how you feel." onChange={e => setFeel(e.target.value)} value={feel} style={{width: '300px', padding: 8,}}/>
-                  </form>}
+        {index < 1 && <button onClick={() => setIndex(index + 1)}>Start</button> }
+        {!hasCameraAccess && index > 0 && <div className={css(styles.cameraAccessText)}>Please provide webcam access...</div>}
+        {hasCameraAccess && index > 0 && <Onboard 
+          incrementIndex={() => setIndex(index + 1)} 
+          decrementIndex={() => setIndex(index + 1)} 
+          index={index} 
+        />}
+        {done &&  <EndForm />}
       </div>
       <div className={css(styles.skip, index > 0 ? styles.hide : '')}>
         <span>SKIP →</span>
@@ -180,6 +148,9 @@ const styles = StyleSheet.create({
     top: 10, 
     right: 10, 
     zIndex: 3
+  },
+  cameraAccessText: {
+    color: 'white'
   }
 });
 

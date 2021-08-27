@@ -1,24 +1,46 @@
-import { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
+import useAudio from './components/Audio/useAudio';
+import { StyleSheet, css } from 'aphrodite';
 
-const useAudio = (url) => {
-  const [audio, setAudio] = useState(new Audio(url));
-  const [playing, setPlaying] = useState(false);
-
-  const toggle = () => setPlaying(!playing);
-
-  useEffect(() => {
-      playing ? audio.play() : audio.pause();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playing]
-  );
+const Player = () => {
+    const [track, setTrack] = useState("");
+    const [playing, toggle, audio] = useAudio(track);
+    const [done, setDone] = useState(false);
 
 
-  useEffect(() => {
-    setAudio(new Audio(url))
-  }, [url])
+    const handleEnded = () => {
+        toggle();
+        console.log("ended");
+        setDone(true);
+    }
 
-  return [playing, toggle, audio];
-};
+    useEffect(() => {
+        audio.addEventListener('ended', () => handleEnded());
+        return () => {
+          audio.removeEventListener('ended', () => handleEnded());
+        };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [audio]);
 
-export default useAudio;
+      return(
+        <div className={css(styles.trackSelection)}>
+            <p><strong>Select your meditation track:</strong></p>
+            <select onChange={e => setTrack(parseInt(e.target.value))}>
+            <option value={0}>Into The Body</option>
+            <option value={1}>Rootedness</option>
+            <option value={2}>Track 1: Short test (local)</option>
+            </select>
+        </div>
+      )
+}
+
+const styles = StyleSheet.create({
+    trackSelection: {
+      position: 'fixed', 
+      top: 10, 
+      right: 10, 
+      zIndex: 3
+    }
+});
+
+export default Player;
