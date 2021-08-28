@@ -22,7 +22,7 @@ const Onboard2 = (props) => {
         if(props.ready){
             const id = setInterval(() => {
                 setIndex(index => index + 1);
-            }, 600);
+            }, 3600);
             setIntervalId(id);
         }
         // eslint-disable-next-line
