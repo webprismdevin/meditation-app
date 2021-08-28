@@ -1,18 +1,36 @@
 import React, {useState, useEffect} from "react";
-import useAudio from './components/Audio/useAudio';
+import useAudio from './useAudio';
+import { getFiles } from "./GetTracks";
 import { StyleSheet, css } from 'aphrodite';
 
-const Player = () => {
+const Player = (props) => {
     const [track, setTrack] = useState("");
+    // eslint-disable-next-line
     const [playing, toggle, audio] = useAudio(track);
-    const [done, setDone] = useState(false);
-
+    // eslint-disable-next-line
+    // const [done, setDone] = useState(false);
+    const [trackList, setTrackList] = useState([]);
 
     const handleEnded = () => {
         toggle();
         console.log("ended");
-        setDone(true);
+        props.handleAudioFinished(true);
     }
+
+    useEffect(() => {
+      getFiles()
+        .then(result => {
+          setTrackList(result);
+          console.log('fired');
+          setTrack(`https://ipfs.io/ipfs/${result[0].cid}/${result[0].name}`)
+        })
+    }, []);
+
+    //downstream playing prop from app.js
+    useEffect(() => {
+      toggle(props.playing);
+      // eslint-disable-next-line
+    }, [props.playing]);
 
     useEffect(() => {
         audio.addEventListener('ended', () => handleEnded());
@@ -22,13 +40,14 @@ const Player = () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [audio]);
 
+      
+
       return(
         <div className={css(styles.trackSelection)}>
+            {/* <button onClick={() => toggle()}>Play</button> */}
             <p><strong>Select your meditation track:</strong></p>
-            <select onChange={e => setTrack(parseInt(e.target.value))}>
-            <option value={0}>Into The Body</option>
-            <option value={1}>Rootedness</option>
-            <option value={2}>Track 1: Short test (local)</option>
+            <select onChange={e => setTrack(e.target.value)}>
+              {trackList.map(t => <option key={t.name} value={`https://ipfs.io/ipfs/${t.cid}/${t.name}`}>{t.name}</option>)}
             </select>
         </div>
       )

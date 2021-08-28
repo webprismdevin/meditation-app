@@ -1,5 +1,4 @@
 import React from 'react';
-import NavButton from './NavButton';
 import Slide2 from './Slide2';
 
 export default class Onboard extends React.Component{
@@ -68,7 +67,6 @@ export default class Onboard extends React.Component{
         return(
             <div className="p-4 flex flex-col items-center">
                 <Slide2 slides={this.slides} index={this.state.index} className="text-white" ready={this.state.ready} incrementIndex={this.incrementIndex}/>
-                {/* {this.state.index < 1 ? <NavButton className="ml-2" buttonText={"Start →"} callBack={this.handleStart}/> : <></>} */}
             </div>
         )
     }
