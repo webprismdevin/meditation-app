@@ -547,11 +547,6 @@ img {
           align-items: center;
 }
 
-.justify-center {
-  -webkit-justify-content: center;
-          justify-content: center;
-}
-
 .rounded-md {
   border-radius: 0.375rem;
 }

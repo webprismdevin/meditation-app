@@ -103,7 +103,7 @@ const App = () => {
 
   return(
     <div className={css(styles.AppWrapper)}>
-      <Player playing={playing} handleAudioFinished={(data) => handleAudioFinished(data)}/>
+      <Player playing={playing} webcamOn={showWebcam} handleAudioFinished={(data) => handleAudioFinished(data)}/>
       {showWebcam && <Webcam 
                                 width={videoConstraints.width} 
                                 height={videoConstraints.height} 
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     animationDuration: '4200ms',
     animationIterationCount: 'infinite',
     backgroundImage: `url(${background})`,
-    backgroundSize: '2800px 1200px',
+    backgroundSize: '2800px 2200px',
     backgroundPosition: 'center',
     opacity: 0.98,
     height: '110vh',

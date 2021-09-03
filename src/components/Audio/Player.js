@@ -7,9 +7,10 @@ const Player = (props) => {
     const [track, setTrack] = useState("");
     // eslint-disable-next-line
     const [playing, toggle, audio] = useAudio(track);
-    // eslint-disable-next-line
-    // const [done, setDone] = useState(false);
     const [trackList, setTrackList] = useState([]);
+    const [webcamOn, setWebcamState] = useState(props.webcamOn);
+
+    console.log(props.webcamOn);
 
     const handleEnded = () => {
         toggle();
@@ -22,7 +23,7 @@ const Player = (props) => {
         .then(result => {
           setTrackList(result);
           console.log('fired');
-          setTrack(`https://ipfs.io/ipfs/${result[0].cid}/${result[0].name}`)
+          setTrack(`https://ipfs.io/ipfs/${result[0].cid}/${result[0].name}`);
         })
     }, []);
 
@@ -40,10 +41,12 @@ const Player = (props) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [audio]);
 
-      
+      useEffect(() => {
+        setWebcamState(props.webcamOn)
+      }, [props.webcamOn])
 
       return(
-        <div className={css(styles.trackSelection)}>
+        <div className={css(styles.trackSelection)} style={{visibility: webcamOn ? "hidden": "visible"}}>
             {/* <button onClick={() => toggle()}>Play</button> */}
             <p><strong>Select your meditation track:</strong></p>
             <select onChange={e => setTrack(e.target.value)}>
