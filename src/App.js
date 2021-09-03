@@ -134,7 +134,7 @@ const App = () => {
           <img src={SwitchCamera} alt="Switch Camera"/>
         </button>
       </div>
-      <SkipButton show={skipVisibility}/>
+      {/* <SkipButton show={skipVisibility}/> */}
     </div>
   )
 }
