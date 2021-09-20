@@ -18,14 +18,13 @@ const App = () => {
   const [ready, setReady] = useState(false);
   const [done, setDone] = useState(false);
   const [onboardingVisibility, setOnboardingVisibility] = useState(false);
-  const [skipVisibility, setSkipVisibility] = useState(true);
+  // const [skipVisibility, setSkipVisibility] = useState(true);
   const [showStartButton, toggleStartButton] = useState(true);
   const [accessNeeded, showAccessNeeded] = useState(false);
   const [showWebcam, toggleShowWebcam] = useState(false);
   const [cameraAccess, setCameraAccess] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [meditationFinished, setMeditationFinished] = useState(false);
-  // const [deviceId, setDeviceId] = React.useState({});
   const [devices, setDevices] = useState([]);
   const [activeCamera, setActiveCamera] = useState(0)
 
